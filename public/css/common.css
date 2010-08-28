@@ -1,11 +1,36 @@
+* {
+  margin:0;
+  padding:0;
+  font-size:100%;
+}
+ul,ol {
+  list-style:none; 
+}
 body {
-  font-family: sans-serif;
+  background:#000 url(../i/bg.png);
+  font-family:helvetica, arial, sans-serif;
   margin: 0 auto;
   width: 600px;
 }
 pre {
   white-space: pre-wrap;
 }
+/* Header
+-------------------------------------*/
+h1 {
+  font-size:2em;
+  font-weight:bold;
+  text-shadow:0 0 1px #fff;
+  letter-spacing:-1px;
+  color:#00233f;
+  margin:2em 0 1em;
+}
+#controls {
+  text-align:right;
+}
+  #controls li {
+    display:inline;
+  }
 #prompt {
   color: blue;
   border-top: 1px solid #CCC;

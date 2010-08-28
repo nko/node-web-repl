@@ -65,25 +65,23 @@ var connect = function() {
 };
 
 
-
-document.getElementById("close").addEventListener("click", function(e) {
-  if (conn) {
-    conn.close();
-    conn = false;
-  }
+// Toggle Connection
+document.getElementById('toggle').addEventListener('click', function(e) {
   e.preventDefault();
-  return false;
-}, false);
 
-document.getElementById("open").addEventListener("click", function(e) {
-  if (!conn) {
-    connect();
+  if (/close/gi.test(this.innerHTML)) {
+    if (conn) {
+      conn.close();
+      conn = false;
+      this.innerHTML = "Open Connection";
+    }
+  } else {
+    if (!conn) {
+      connect();
+      this.innerHTML = "Close Connection";
+    }
   }
-  e.preventDefault();
-  return false;
 }, false);
-
-
 
 function execute() {
   var code = prompt_line.textContent.trimRight();
