@@ -6,7 +6,7 @@ var sys = require("sys")
   , repl = require("repl")
   , ws = require('websocket-server/lib/ws')
   , meryl = require('meryl/lib/meryl');
-	_ = require('underscore/underscore')._;
+  _ = require('underscore/underscore')._;
 
 function log(msg) {
   sys.puts(msg);
@@ -17,7 +17,7 @@ function log(msg) {
   Spin up our web server:
 -----------------------------------------------*/
 
-var readFile = function (path) {
+function readFile(path) {
   return fs.readFileSync(__dirname + path.replace(/^\.*/, ''), 'utf-8');
 }
 
@@ -73,4 +73,4 @@ server.addListener("close", function(conn){
   conn.broadcast("<"+conn.id+"> disconnected");
 });
 
-server.listen(80);
+server.listen(8000);
