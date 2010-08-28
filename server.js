@@ -90,4 +90,4 @@ server.addListener("close", function(conn){
   conn.broadcast("<"+conn.id+"> disconnected");
 });
 
-server.listen(80);
+server.listen(8000);
