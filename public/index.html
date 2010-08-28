@@ -104,7 +104,7 @@ function log(data){
 var conn;
 var connect = function() {
   if (window.WebSocket) {
-    conn = new WebSocket("ws://localhost:8000/test");
+    conn = new WebSocket("ws://"+ location.host +"/test");
 
     conn.onmessage = function(event) {
       log(event.data);
