@@ -106,7 +106,9 @@ function scrollToBottom() {
 }
 
 function log(data){
-  output_log.innerHTML += data;
+  if (data != ">") {
+    output_log.innerHTML += data;
+  }
 }
 
 
@@ -151,7 +153,7 @@ document.getElementById("open").addEventListener("click", function(e) {
 
 function execute() {
   var code = prompt_line.textContent;
-  output_log.innerHTML += code + "\n";
+  output_log.innerHTML += prompt.textContent + "\n";
   conn.send(code);
   prompt_line.innerHTML = " ";
   prompt_line.select();
@@ -161,6 +163,7 @@ function execute() {
 prompt_line.addEventListener("keypress", function(event) {
   if (event.which === 13) { // Enter key
     execute();
+    event.preventDefault();
   }
 }, false);
 
