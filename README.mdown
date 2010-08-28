@@ -2,6 +2,8 @@
 
     git clone git@github.com:nko/nv.git
     cd nv
-    git submodule update --init
+    npm install websocket-server
+    npm install connect
+    npm install express
     node server.js
     open http://localhost:8000/
