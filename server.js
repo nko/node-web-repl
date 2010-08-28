@@ -63,7 +63,7 @@ server.addListener("connection", function(conn){
 
   conn.addListener("message", function(response){
     log("<"+conn.id+"> "+ response);
-		aRepl.rli.write(response);
+    aRepl.rli.write(response);
   });
 
 });
