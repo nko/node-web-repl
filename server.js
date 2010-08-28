@@ -33,7 +33,7 @@ app.configure('production', function(){
 });
 
 app.get('/', function(req, res){
-  res.redirect('/index.html');
+  res.sendfile('public/index.html');
 });
 
 /*-----------------------------------------------
