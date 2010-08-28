@@ -5,6 +5,8 @@
     <style>
     body {
       font-family: sans-serif;
+      margin: 0 auto;
+      width: 600px;
     }
     #prompt {
       color: blue;
@@ -12,7 +14,10 @@
     }
     #prompt_line {
       color: black;
-      display: inline-block;
+      display: block;
+    }
+    #gt {
+      float: left;
     }
     </style>
   </head>
@@ -21,7 +26,7 @@
     <p>
       <a href="#" id="close">Close Connection.</a> | <a href="#" id="open">Open Connection.</a>
     </p>
-    <pre><div id="log"></div><div id="prompt">&gt; <span id="prompt_line" contenteditable> </span></div></pre>
+    <pre><div id="log"></div><div id="prompt"><span id="gt">&gt; </span><span id="prompt_line" contenteditable><br/></span></div></pre>
 
 <script type="text/javascript">
 // FIXME: move it to utils.js
@@ -155,7 +160,7 @@ function execute() {
   var code = prompt_line.textContent;
   output_log.innerHTML += prompt.textContent + "\n";
   conn.send(code);
-  prompt_line.innerHTML = " ";
+  prompt_line.innerHTML = " <br>";
   prompt_line.select();
 }
 
@@ -167,13 +172,22 @@ prompt_line.addEventListener("keypress", function(event) {
   }
 }, false);
 
-window.addEventListener("click", function(event) {
-  prompt_line.select();
+document.documentElement.addEventListener("click", function(event) {
+  if (event.target.id == "prompt_line" || event.target.parentNode.id == "prompt_line") {
+    return;
+  }
+  selectEnd();
 }, true);
+
+
+function selectEnd(){
+  var l = prompt_line.textContent.length;
+  prompt_line.select(l);
+}
 
 
 window.onload = function(){
   connect();
-  prompt_line.select();
+  selectEnd()
 };
 </script></body></html>
