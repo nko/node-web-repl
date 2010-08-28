@@ -1,9 +1,13 @@
+require.paths.unshift('./vendor');
 var sys = require("sys")
   , fs = require("fs")
   , path = require("path")
   , http = require("http")
   , repl = require("repl")
-  , ws = require('websocket-server');
+  , ws = require('websocket-server/lib/ws')
+  , meryl = require('meryl/lib/meryl');
+	_ = require('underscore/underscore')._;
+
 
 
 function log(msg) {
@@ -75,4 +79,27 @@ server.addListener("close", function(conn){
 
 server.listen(8000);
 
-console.log("Started at http://localhost:8000/");
+var readFile = function (path) {
+	return fs.readFileSync(__dirname + path.replace(/^\.*/, ''), 'utf-8');
+}
+
+var static = function(path) {
+	return readFile('/public/' + path);
+};
+
+var render = function(viewname, data) {
+	var viewCnt = readFile('/view/' + viewname + '.html');
+	return _.template(viewCnt, data);
+};
+
+meryl.h('GET /static/<filepath>', function () {
+	return static(this.filepath);
+});
+
+meryl.h('GET /', function() {
+	return static('index.html');
+});
+
+http.createServer(meryl.cgi).listen(8080);
+
+console.log("http -> http://localhost:8080/ ws -> ws://localhost:8000");
