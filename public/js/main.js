@@ -1,7 +1,7 @@
-var prompt = document.getElementById("prompt");
-var prompt_line = document.getElementById("prompt_line");
-var output_log = document.getElementById("log");
-var suggestion = document.getElementById("suggestion");
+var prompt = $("#prompt");
+var prompt_line = $("#prompt_line");
+var output_log = $("#log");
+var suggestion = $("#suggestion");
 
 
 function scrollToBottom() {
@@ -20,13 +20,13 @@ function log(data){
     var group = document.createElement("div");
     group.className = "group";
     group.textContent = data;
-    output_log.appendChild(group);
+    output_log.append(group);
   }
 }
 
 
 var conn;
-var connect = function() {
+function connect() {
   if (window.WebSocket) {
     conn = new WebSocket("ws://"+ location.host +"/test");
 
@@ -40,14 +40,14 @@ var connect = function() {
       }
 
       if (json && json.length && json[0].length && json[0][0].slice) {
-        var compl = json[0][0].slice(json[1].length);
-        if (compl && compl != suggestion.textContent) {
-          suggestion.textContent = compl;
+        var compl = json[0][0];
+        if (compl && compl != suggestion.text()) {
+          suggestion.text(compl.slice(json[1].length));
         } else {
-          suggestion.textContent = "";
+          suggestion.text("");
         }
       } else {
-        suggestion.textContent = "";
+        suggestion.text("");
         if (!json.splice) {
           log(event.data);
         }
@@ -62,59 +62,59 @@ var connect = function() {
       log("opened");
     };
   }
-};
+}
 
 
 
-document.getElementById("close").addEventListener("click", function(e) {
+$("#close").click(function(e) {
   if (conn) {
     conn.close();
     conn = false;
   }
   e.preventDefault();
   return false;
-}, false);
+});
 
-document.getElementById("open").addEventListener("click", function(e) {
+$("#open").click(function(e) {
   if (!conn) {
     connect();
   }
   e.preventDefault();
   return false;
-}, false);
+});
 
 
 
 function execute() {
-  var code = prompt_line.textContent.trimRight();
+  var code = prompt_line.text().trimRight();
   var group = document.createElement("div");
   group.className = "group";
   group.textContent = prompt.textContent;
-  output_log.appendChild(group);
+  output_log.append(group);
   conn.send(JSON.stringify({action: "execute", code: code}) );
-  prompt_line.innerHTML = " ";
-  prompt_line.select();
+  prompt_line.html(" ");
+  prompt_line[0].select();
 }
 
 function accept_suggestion() {
-  if (suggestion.textContent) {
-    var new_value = prompt_line.textContent.trimRight() + suggestion.textContent;
-    prompt_line.textContent = new_value;
-    suggestion.textContent = "";
-    prompt_line.select(new_value.length);
+  if (suggestion.text()) {
+    var new_value = prompt_line.text().trimRight() + suggestion.text();
+    prompt_line.text(new_value);
+    suggestion.text();
+    prompt_line[0].select(new_value.length);
   }
 }
 
 
-prompt_line.addEventListener("keypress", function(event) {
+prompt_line.keypress(function(event) {
   if (event.which === 13 && !event.ctrlKey && !event.altKey && !event.metaKey) { // Enter key
     execute();
     event.preventDefault();
   }
-}, false);
+});
 
 
-prompt_line.addEventListener("keydown", function(event) {
+prompt_line.keydown(function(event) {
   switch (event.which) {
     case 38: // Arrow Up
       //FIXME: previous history item
@@ -128,22 +128,22 @@ prompt_line.addEventListener("keydown", function(event) {
       event.preventDefault();
       break;
     default:
-      var prevCode = prompt_line.textContent.trimRight();
-      if (prompt_line.selectionLeftOffset >= prevCode.length) {
+      var prevCode = prompt_line.text().trimRight();
+      if (prompt_line[0].selectionLeftOffset >= prevCode.length) {
         setTimeout(function() {
-          var code = prompt_line.textContent.trimRight();
+          var code = prompt_line.text().trimRight();
           if (prevCode !== code) {
             conn.send(JSON.stringify({action: "complete", code: code}));
-            suggestion.textContent = "";
+            suggestion.text("");
           }
         }, 0);
       }
       break;
   }
-}, false);
+});
 
 
-document.documentElement.addEventListener("click", function(event) {
+$(document.documentElement).click(function(event) {
   if (event.target.id == "prompt_line" || event.target.parentNode.id == "prompt_line") {
     return;
   }
@@ -152,8 +152,8 @@ document.documentElement.addEventListener("click", function(event) {
 
 
 function selectEnd(){
-  var l = prompt_line.textContent.length;
-  prompt_line.select(l);
+  var l = prompt_line.text().length;
+  prompt_line[0].select(l);
 }
 
 
