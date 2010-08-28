@@ -77,15 +77,23 @@ h1 {
 -------------------------------------*/
 #term {
   background:#000;
-  background:rgba(0, 0, 0, .65);
+  background:rgba(0, 0, 0, .5);
   color:green;
   padding:.5em;
+  line-height:1.3;
   border:1px solid #999;
 }
 #prompt_line {
-  color: black;
+  color: #fff;
   display: inline-block;
+  min-width: 2em;
+  height: 1em;
+  cursor: text;
 }
+  #prompt_line:focus {
+    outline:none;
+    border:none;
+  }
 #suggestion {
   display: inline-block;
 }
