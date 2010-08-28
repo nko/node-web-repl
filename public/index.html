@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>REPL</title>
+    <style>
+    #prompt_line {
+      display: inline-block;
+    }
+    </style>
+  </head>
+  <body>
+    <p>
+      <a href="#" id="close">Close Connection.</a> | <a href="#" id="open">Open Connection.</a>
+    </p>
+    <pre><div id="log"></div><div id="prompt">&gt; <span id="prompt_line" contenteditable> </span></div></pre>
+
+<script type="text/javascript">
+// FIXME: move it to utils.js
+Array.prototype.__defineGetter__("last", function(){
+  return this[this.length - 1];
+});
+
+/**
+ * @param {Number} [start=0] >= 0
+ * @param {Number} [end=start] >= 0
+ * @see http://github.com/NV/select-text.js
+ */
+Element.prototype.select = function select(start, end)
+{
+    start = start || 0;
+
+    if (arguments.length < 2)
+        end = start;
+    else
+        end = Math.min(end, this.textContent.length);
+
+    var range = document.createRange();
+    var node = this.firstChild;
+
+    if (node) {
+
+        var i = start;
+        var length;
+
+        while (i > (length = node.textContent.length)) {
+            i -= length;
+            node = node.nextSibling;
+        }
+
+        var startNode;
+        if (node.firstChild) {
+            startNode = node.firstChild;
+            while (startNode.firstChild)
+                startNode = startNode.firstChild;
+
+        } else
+            startNode = node;
+
+        range.setStart(startNode, i);
+
+        var j = end - (start - i);
+        while (j > (length = node.textContent.length)) {
+            j -= length;
+            node = node.nextSibling;
+        }
+
+        var endNode;
+        if (node.firstChild) {
+            endNode = node.firstChild;
+            while (endNode.firstChild)
+                endNode = endNode.firstChild;
+
+        } else
+            endNode = node;
+
+        range.setEnd(endNode, j);
+
+    } else {
+        range.setStartBefore(this);
+        range.setEndBefore(this);
+    }
+
+    var selection = getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
+
+    return this;
+};
+
+
+var prompt = document.getElementById("prompt");
+var prompt_line = document.getElementById("prompt_line");
+var output_log = document.getElementById("log");
+
+
+function scrollToBottom() {
+	window.scrollBy(0, document.body.scrollHeight - document.body.scrollTop);
+}
+
+function log(data){
+	output_log.innerHTML += data;
+}
+
+
+var conn;
+var connect = function() {
+  if (window.WebSocket) {
+    conn = new WebSocket("ws://localhost:8000/test");
+
+    conn.onmessage = function(event) {
+			log(event.data);
+    };
+
+    conn.onclose = function() {
+      log("closed");
+    };
+
+    conn.onopen = function() {
+      log("opened");
+    };
+  }
+};
+
+
+
+document.getElementById("close").addEventListener("click", function(e) {
+  if (conn) {
+    conn.close();
+    conn = false;
+  }
+  e.preventDefault();
+  return false;
+}, false);
+
+document.getElementById("open").addEventListener("click", function(e) {
+  if (!conn) {
+    connect();
+  }
+  e.preventDefault();
+  return false;
+}, false);
+
+
+function execute() {
+  var code = prompt_line.textContent;
+  output_log.innerHTML += code + "\n";
+  conn.send(code);
+  prompt_line.innerHTML = " ";
+  prompt_line.select();
+}
+
+
+prompt_line.addEventListener("keypress", function(event) {
+  if (event.which === 13) { // Enter key
+    execute();
+  }
+}, false);
+
+window.addEventListener("click", function(event) {
+  prompt_line.select();
+}, true);
+
+
+window.onload = function(){
+	connect();
+  prompt_line.select();
+};
+</script></body></html>
