@@ -125,7 +125,6 @@ prompt_line.keydown(function(event) {
     case 39: // Arrow Right
     case 9:  // Tab key
       accept_suggestion();
-      event.preventDefault();
       break;
     default:
       var prevCode = prompt_line.text().trimRight();
