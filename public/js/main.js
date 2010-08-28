@@ -24,16 +24,18 @@ function log(data){
 }
 
 
-var conn;
+var socket;
 function connect() {
-  if (window.WebSocket) {
-    conn = new WebSocket("ws://"+ location.host +"/test");
+  if (window.io) {
+    io.setPath('/js/Socket.IO/');
+    socket = new io.Socket('localhost');
 
-    conn.onmessage = function(event) {
+    socket.onmessage = function(event) {
       try {
         // FIXME: we should send JSON everytime
         var json = JSON.parse(event.data);
       } catch (err) {
+        log(event.data);
         console.warn(err);
         return;
       }
@@ -53,13 +55,15 @@ function connect() {
       }
     };
 
-    conn.onclose = function() {
+    socket.onclose = function() {
       log("closed");
     };
 
-    conn.onopen = function() {
+    socket.onopen = function() {
       log("opened");
     };
+
+    socket.connect();
   } else {
     $(document.body).addClass("error").html("<h1>Your browser does not support WebSockets :-(</h1>");
   }
@@ -71,14 +75,14 @@ toggle.click(function(e) {
   e.preventDefault();
 
   if (/close/gi.test(this.innerHTML)) {
-    if (conn) {
-      conn.close();
-      conn = false;
+    if (socket) {
+      socket.close();
+      socket = false;
       this.innerHTML = "Open Connection";
       this.className = "off";
     }
   } else {
-    if (!conn) {
+    if (!socket) {
       connect();
       this.innerHTML = "Close Connection";
       this.className = "on"; 
@@ -91,7 +95,7 @@ function execute() {
   var group = $("<div class='group' />");
   group.text(prompt.text());
   output_log.append(group);
-  conn.send(JSON.stringify({action: "execute", code: code}) );
+  socket.send(JSON.stringify({action: "execute", code: code}) );
   prompt_line.text(" ");
   prompt_line[0].select();
 }
@@ -132,7 +136,7 @@ prompt_line.keydown(function(event) {
         setTimeout(function() {
           var code = prompt_line.text().trimRight();
           if (prevCode !== code) {
-            conn.send(JSON.stringify({action: "complete", code: code}));
+            socket.send(JSON.stringify({action: "complete", code: code}));
             suggestion.text("");
           }
         }, 0);
