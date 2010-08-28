@@ -101,7 +101,7 @@ function accept_suggestion() {
   if (suggestion.text()) {
     var new_value = prompt_line.text().trimRight() + suggestion.text();
     prompt_line.text(new_value);
-    suggestion.text();
+    suggestion.text("");
     prompt_line[0].select(new_value.length);
   }
 }
