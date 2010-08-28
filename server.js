@@ -5,7 +5,7 @@ var fs = require("fs")
   , io = require('socket.io')
   , express = require('express');
 
-var PORT = 8000,
+var PORT = 80,
     PROMPT = ">";
     
 var aRepl;
