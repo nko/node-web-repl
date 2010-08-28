@@ -31,7 +31,14 @@ var connect = function() {
     conn = new WebSocket("ws://"+ location.host +"/test");
 
     conn.onmessage = function(event) {
-      var json = JSON.parse(event.data);
+      try {
+        // FIXME: we should send JSON everytime
+        var json = JSON.parse(event.data);
+      } catch (err) {
+        console.warn(err);
+        return;
+      }
+
       if (json && json.length && json[0].length && json[0][0].slice) {
         var compl = json[0][0].slice(json[1].length);
         if (compl && compl != suggestion.textContent) {
