@@ -62,8 +62,25 @@ server.addListener("connection", function(conn){
   conn.broadcast("<"+conn.id+"> connected");
 
   conn.addListener("message", function(response){
-    log("<"+conn.id+"> "+ response);
-    aRepl.rli.write(response);
+
+    var data = JSON.parse(response);
+    log("<"+conn.id+"> "+ data.action + " " + data.code);
+
+    if (data.action == "execute") {
+      var lines = data.code.split(/\n/);
+      for (var i=0; i<lines.length; i++) {
+        aRepl.rli.write(lines[i]);
+      }
+      conn.broadcast(data.code);
+    } else if (data.action == "complete") {
+      if (data.code) {
+        var result = aRepl.complete(data.code);
+        if (result && result.length) {
+          conn.write(JSON.stringify(result));
+        }
+      }
+    }
+
   });
 
 });

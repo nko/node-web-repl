@@ -8,16 +8,19 @@
       margin: 0 auto;
       width: 600px;
     }
+    pre {
+      white-space: pre-wrap;
+    }
     #prompt {
       color: blue;
       border-top: 1px solid #CCC;
     }
     #prompt_line {
       color: black;
-      display: block;
+      display: inline-block;
     }
-    #gt {
-      float: left;
+    #suggestion {
+      display: inline-block;
     }
     </style>
   </head>
@@ -26,7 +29,7 @@
     <p>
       <a href="#" id="close">Close Connection.</a> | <a href="#" id="open">Open Connection.</a>
     </p>
-    <pre><div id="log"></div><div id="prompt"><span id="gt">&gt; </span><span id="prompt_line" contenteditable><br/></span></div></pre>
+    <pre><div id="log"></div><div id="prompt"><span id="gt">&gt; </span><span id="prompt_line" contenteditable> </span><span id="suggestion"></span></div></pre>
     <a href="http://nodeknockout.com/teams/nv"><img style="position: fixed; top: 5px; right: 5px; border: 0;" src="http://nodeknockout.com/images/voteko.png" alt="Help me win Node.js KO!" /></a>
   <script type="text/javascript" src="main.js"></script>
   <script type="text/javascript" src="utils.js"></script>

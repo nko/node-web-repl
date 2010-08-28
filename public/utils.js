@@ -1,4 +1,3 @@
-// FIXME: move it to utils.js
 Array.prototype.__defineGetter__("last", function(){
   return this[this.length - 1];
 });
@@ -68,3 +67,27 @@ Element.prototype.select = function select(start, end) {
 
   return this;
 };
+
+
+Element.prototype.__defineGetter__("selectionLeftOffset", function() {
+  // Calculate selection offset relative to the current element.
+
+  var selection = window.getSelection();
+  if (!selection.containsNode(this, true))
+    return null;
+
+  var leftOffset = selection.anchorOffset;
+  var node = selection.anchorNode;
+
+  while (node !== this) {
+    while (node.previousSibling) {
+      node = node.previousSibling;
+      leftOffset += node.textContent.length;
+    }
+    node = node.parentNode;
+  }
+
+  return leftOffset;
+});
+
+
