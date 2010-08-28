@@ -11,12 +11,16 @@ body {
   font-family:helvetica, arial, sans-serif;
   margin: 0 auto;
   width: 600px;
+  color:#00233f
 }
 pre {
   white-space: pre-wrap;
 }
 /* Header
 -------------------------------------*/
+header {
+  overflow:hidden;
+}
 h1 {
   font-size:2em;
   font-weight:bold;
@@ -25,11 +29,27 @@ h1 {
   color:#00233f;
   margin:2em 0 1em;
 }
-#controls {
-  text-align:right;
+#toggle {
+  font-size:.8em;
+  border-bottom:1px dashed #00233f;
+  float:right;
+  cursor:pointer;
+  text-transform:uppercase;
+  position:relative;
 }
-  #controls li {
-    display:inline;
+  #toggle:before {
+    content: '• ';
+    font-weight:bold;
+    position:absolute;
+    left:-.7em;
+  }
+  .off:before {
+    color:#ce0000;
+    text-shadow:0 0 10px #ce0000;
+  }
+  .on:before {
+    color:#0db800;
+    text-shadow:0 0 10px #0db800;
   }
 #prompt {
   color: blue;

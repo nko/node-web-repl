@@ -75,11 +75,13 @@ toggle.click(function(e) {
       conn.close();
       conn = false;
       this.innerHTML = "Open Connection";
+      this.className = "off";
     }
   } else {
     if (!conn) {
       connect();
       this.innerHTML = "Close Connection";
+      this.className = "on"; 
     }
   }
 });
