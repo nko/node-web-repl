@@ -55,25 +55,20 @@ var PROMPT = ">";
 // Handle WebSocket Requests
 server.addListener("connection", function(conn){
   log("opened connection: "+conn.id);
-
-  aRepl = repl.start(PROMPT, conn);
-
+  conn.repl = repl.start(PROMPT, conn);
   server.send(conn.id, "Connected as: "+conn.id);
-  conn.broadcast("<"+conn.id+"> connected");
-
   conn.addListener("message", function(response){
-
     var data = JSON.parse(response);
     log("<"+conn.id+"> "+ data.action + " " + data.code);
     if (data.action == "execute") {
       var lines = data.code.split(/\n/);
       for (var i=0; i<lines.length; i++) {
-        aRepl.rli.write(lines[i]);
+        conn.repl.rli.write(lines[i]);
       }
-      conn.broadcast(data.code);
+      conn.write(data.code);
     } else if (data.action == "complete") {
       if (data.code) {
-        var result = aRepl.complete(data.code);
+        var result = conn.repl.complete(data.code);
         if (result && result.length) {
          conn.write(JSON.stringify(result));
         }
