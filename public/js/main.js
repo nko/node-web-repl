@@ -1,3 +1,4 @@
+(function(){
 var prompt = $("#prompt");
 var prompt_line = $("#prompt_line");
 var output_log = $("#log");
@@ -8,6 +9,7 @@ function scrollToBottom() {
   window.scrollBy(0, document.body.scrollHeight - document.body.scrollTop);
 }
 
+// loggin 
 function log(data){
   if (data != ">") { // FIXME
 
@@ -60,8 +62,6 @@ function connect() {
     conn.onopen = function() {
       log("opened");
     };
-  } else {
-    $(document.body).addClass("error").html("<h1>Your browser does not support WebSockets :-(</h1>");
   }
 }
 
@@ -155,8 +155,8 @@ function selectEnd(){
   prompt_line[0].select(l);
 }
 
-
 window.onload = function(){
   connect();
-  selectEnd()
+  selectEnd();
 };
+})();
