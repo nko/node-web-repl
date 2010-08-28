@@ -1,15 +1,14 @@
-var sys = require("sys")
-  , fs = require("fs")
+var fs = require("fs")
   , path = require("path")
   , http = require("http")
   , repl = require("repl")
-  , ws = require('websocket-server')
+  , io = require('socket.io')
   , express = require('express');
 
-function log(msg) {
-  sys.puts(msg);
-}
-
+var PORT = 8000,
+    PROMPT = ">";
+    
+var aRepl;
 
 /*-----------------------------------------------
   Spin up our web server:
@@ -36,54 +35,39 @@ app.get('/', function(req, res){
   res.sendfile('public/index.html');
 });
 
+app.listen(PORT);
+
 /*-----------------------------------------------
   Spin up our websocket server:
 -----------------------------------------------*/
-var server = ws.createServer({ debug: true, server: app });
 
-server.addListener("listening", function(){
-  log("Listening for connections.");
-});
+var socket = io.listen(app);
 
-var aRepl;
-var PROMPT = ">";
-
-// Handle WebSocket Requests
-server.addListener("connection", function(conn){
-  log("opened connection: "+conn.id);
-
-  aRepl = repl.start(PROMPT, conn);
-
-  server.send(conn.id, "Connected as: "+conn.id);
-  conn.broadcast("<"+conn.id+"> connected");
-
-  conn.addListener("message", function(response){
-
-    var data = JSON.parse(response);
-    log("<"+conn.id+"> "+ data.action + " " + data.code);
-
+socket.on('connection', function(client){
+  console.log("opened connection: " + client.sessionId);
+  aRepl = repl.start(PROMPT, client);
+  client.send("Connected as: " + client.sessionId);
+  
+  client.on('message', function(msg) {
+    var data = JSON.parse(msg);
+    console.log("<"+client.sessionId+"> "+ data.action + " " + data.code);
     if (data.action == "execute") {
       var lines = data.code.split(/\n/);
       for (var i=0; i<lines.length; i++) {
         aRepl.rli.write(lines[i]);
       }
-      conn.broadcast(data.code);
+      client.send(data.code);
     } else if (data.action == "complete") {
       if (data.code) {
         var result = aRepl.complete(data.code);
         if (result && result.length) {
-          conn.write(JSON.stringify(result));
+         client.send(JSON.stringify(result));
         }
       }
     }
-
   });
-
+  
+  client.on('disconnect', function(){  })
 });
 
-server.addListener("close", function(conn){
-  log("closed connection: "+conn.id);
-  conn.broadcast("<"+conn.id+"> disconnected");
-});
-
-server.listen(8000);
+console.log('listening: ' + PORT);
