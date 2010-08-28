@@ -30,7 +30,7 @@ var render = function(viewname, data) {
   return _.template(viewCnt, data);
 };
 
-meryl.h('GET /static/<filepath>', function () {
+meryl.h('GET /<filepath>', function () {
   return static(this.filepath);
 });
 
