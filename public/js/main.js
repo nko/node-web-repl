@@ -2,7 +2,7 @@ var prompt = $("#prompt");
 var prompt_line = $("#prompt_line");
 var output_log = $("#log");
 var suggestion = $("#suggestion");
-
+var toggle = $("#toggle");
 
 function scrollToBottom() {
   window.scrollBy(0, document.body.scrollHeight - document.body.scrollTop);
@@ -17,9 +17,8 @@ function log(data){
       data = "null";
     }
 
-    var group = document.createElement("div");
-    group.className = "group";
-    group.textContent = data;
+    var group = $("<div class='group' />");
+    group.text(data);
     output_log.append(group);
   }
 }
@@ -61,29 +60,29 @@ function connect() {
     conn.onopen = function() {
       log("opened");
     };
+  } else {
+    $(document.body).addClass("error").html("<h1>Your browser does not support WebSockets :-(</h1>");
   }
 }
 
 
-
-$("#close").click(function(e) {
-  if (conn) {
-    conn.close();
-    conn = false;
-  }
+// Toggle Connection
+toggle.click(function(e) {
   e.preventDefault();
-  return false;
-});
 
-$("#open").click(function(e) {
-  if (!conn) {
-    connect();
+  if (/close/gi.test(this.innerHTML)) {
+    if (conn) {
+      conn.close();
+      conn = false;
+      this.innerHTML = "Open Connection";
+    }
+  } else {
+    if (!conn) {
+      connect();
+      this.innerHTML = "Close Connection";
+    }
   }
-  e.preventDefault();
-  return false;
 });
-
-
 
 function execute() {
   var code = prompt_line.text().trimRight();
