@@ -7,8 +7,9 @@ ul,ol {
   list-style:none; 
 }
 body {
+  margin-top:.1em;
   background:#000 url(../i/bg.png);
-  font-family:helvetica, arial, sans-serif;
+  font-family:"helvetica",sans-serif;
   margin: 0 auto;
   width: 600px;
   color:#00233f
@@ -16,18 +17,39 @@ body {
 pre {
   white-space: pre-wrap;
 }
+#app {
+  border:1px solid;
+  border-color:#eee #aaa #888;
+  border-radius:10px 10px 0 0;
+  -moz-border-radius:10px 10px 0 0;
+  background-clip: padding-box;
+  -webkit-background-clip: padding-box;
+  margin:3em 0 1em;
+}
 /* Header
 -------------------------------------*/
 header {
   overflow:hidden;
 }
 h1 {
-  font-size:2em;
+  background:#aaa url(../i/bg.png);
+  border-radius:10px 10px 0 0;
+  -moz-border-radius:10px 10px 0 0;
+  background-clip: padding-box;
+  -webkit-background-clip: padding-box;
+  padding:.25em .25em .1em;
+  font-size:1.5em;
   font-weight:bold;
-  text-shadow:0 0 1px #fff;
+  text-shadow:0 1px 0 #eee;
   letter-spacing:-1px;
   color:#00233f;
-  margin:2em 0 1em;
+}
+#controls {
+  background:#222 url(../i/bg.png);
+  border-top:1px solid #555;
+  border-bottom:1px solid #bbb;
+  overflow:hidden;
+  padding:.5em;
 }
 #toggle {
   font-size:.8em;
@@ -41,7 +63,7 @@ h1 {
     content: '• ';
     font-weight:bold;
     position:absolute;
-    left:-.7em;
+    left:-1.1em;
   }
   .off:before {
     color:#ce0000;
@@ -51,9 +73,14 @@ h1 {
     color:#0db800;
     text-shadow:0 0 10px #0db800;
   }
-#prompt {
-  color: blue;
-  border-top: 1px solid #CCC;
+/* Terminal 
+-------------------------------------*/
+#term {
+  background:#000;
+  background:rgba(0, 0, 0, .65);
+  color:green;
+  padding:.5em;
+  border:1px solid #999;
 }
 #prompt_line {
   color: black;
