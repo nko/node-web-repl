@@ -88,12 +88,11 @@ toggle.click(function(e) {
 
 function execute() {
   var code = prompt_line.text().trimRight();
-  var group = document.createElement("div");
-  group.className = "group";
-  group.textContent = prompt.textContent;
+  var group = $("<div class='group' />");
+  group.text(prompt.text());
   output_log.append(group);
   conn.send(JSON.stringify({action: "execute", code: code}) );
-  prompt_line.html(" ");
+  prompt_line.text(" ");
   prompt_line[0].select();
 }
 
