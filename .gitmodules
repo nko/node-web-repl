@@ -1,9 +1,0 @@
-[submodule "vendor/websocket-server"]
-	path = vendor/websocket-server
-	url = http://github.com/miksago/node-websocket-server.git
-[submodule "vendor/underscore"]
-	path = vendor/underscore
-	url = http://github.com/documentcloud/underscore.git
-[submodule "vendor/meryl"]
-	path = vendor/meryl
-	url = http://github.com/coffeemate/meryl.git

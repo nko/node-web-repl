@@ -1,0 +1,19 @@
+body {
+  font-family: sans-serif;
+  margin: 0 auto;
+  width: 600px;
+}
+pre {
+  white-space: pre-wrap;
+}
+#prompt {
+  color: blue;
+  border-top: 1px solid #CCC;
+}
+#prompt_line {
+  color: black;
+  display: inline-block;
+}
+#suggestion {
+  display: inline-block;
+}

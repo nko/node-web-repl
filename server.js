@@ -1,12 +1,10 @@
-require.paths.unshift('./vendor');
 var sys = require("sys")
   , fs = require("fs")
   , path = require("path")
   , http = require("http")
   , repl = require("repl")
-  , ws = require('websocket-server/lib/ws')
-  , meryl = require('meryl/lib/meryl');
-  _ = require('underscore/underscore')._;
+  , ws = require('websocket-server')
+  , express = require('express');
 
 function log(msg) {
   sys.puts(msg);
@@ -17,33 +15,31 @@ function log(msg) {
   Spin up our web server:
 -----------------------------------------------*/
 
-function readFile(path) {
-  return fs.readFileSync(__dirname + path.replace(/^\.*/, ''), 'utf-8');
-}
+var app = express.createServer();
 
-var static = function(path) {
-  return readFile('/public/' + path);
-};
-
-var render = function(viewname, data) {
-  var viewCnt = readFile('/view/' + viewname + '.html');
-  return _.template(viewCnt, data);
-};
-
-meryl.h('GET /<filepath>', function () {
-  return static(this.filepath);
+app.configure(function(){
+    app.use(express.methodOverride());
+    app.use(express.bodyDecoder());
+    app.use(app.router);
+    app.use(express.staticProvider(__dirname + '/public'));
 });
 
-meryl.h('GET /', function() {
-  return static('index.html');
+app.configure('development', function(){
+    app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
 });
 
-var httpServer = http.createServer(meryl.cgi);
+app.configure('production', function(){
+    app.use(express.errorHandler());
+});
+
+app.get('/', function(req, res){
+  res.redirect('/index.html');
+});
 
 /*-----------------------------------------------
   Spin up our websocket server:
 -----------------------------------------------*/
-var server = ws.createServer({ debug: true, server: httpServer });
+var server = ws.createServer({ debug: true, server: app });
 
 server.addListener("listening", function(){
   log("Listening for connections.");
