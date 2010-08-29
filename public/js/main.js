@@ -99,6 +99,10 @@ function execute() {
   conn.send(JSON.stringify({action: "execute", code: code}) );
   prompt_line.html("<p><br></p>");
   prompt_line[0].select();
+
+  if (code && prompt_history.last != code) {
+    prompt_history.push(code);
+  }  
 }
 
 function accept_suggestion() {
@@ -119,13 +123,35 @@ prompt_line.keypress(function(event) {
 });
 
 
+function prompt_history_previous() {
+  if (prompt_history.current_index > 0) {
+    prompt_history.current_index--;
+  } else {
+    prompt_history.current_index = prompt_history.length - 1;
+  }
+  return prompt_history[prompt_history.current_index]
+}
+
+function prompt_history_next() {
+  if (prompt_history.current_index >= prompt_history.length - 1) {
+    prompt_history.current_index = 0;
+  } else {
+    prompt_history.current_index++;
+  }
+  return prompt_history[prompt_history.current_index]
+}
+
 prompt_line.keydown(function(event) {
   switch (event.which) {
     case 38: // Arrow Up
-      //FIXME: previous history item
+      prompt_line.text(prompt_history_previous());
+      selectEnd();
+      event.preventDefault();
       break;
     case 40: // Arrow Down
-      //FIXME: next history item
+      prompt_line.text(prompt_history_next());
+      selectEnd();
+      event.preventDefault();
       break;
     case 39: // Arrow Right
     case 9:  // Tab key
