@@ -1,3 +1,4 @@
+(function(){
 var prompt = $("#prompt");
 var prompt_line = $("#prompt_line");
 var output_log = $("#log");
@@ -27,9 +28,9 @@ function log(data){
     var group = $("<div class='group' />");
     group.text(data);
     output_log.append(group);
+    output_log.animate({scrollTop: output_log[0].scrollHeight}, 250);
   }
 }
-
 
 var conn;
 function connect() {
@@ -92,14 +93,19 @@ toggle.click(function(e) {
 });
 
 function execute() {
-  var code = prompt_line.text().trim();
+  var code = prompt_line.val().trimRight();
   var group = $("<div class='group' />");
-  group.text(prompt.text().trim());
-  output_log.append(group);
-  conn.send(JSON.stringify({action: "execute", code: code}) );
-  prompt_line.html("<p><br></p>");
-  prompt_line[0].select();
 
+  group.html([
+    '<span class="prompt">',
+    prompt.text(),'</span>',
+    ' ',
+    code
+  ].join(''));
+
+  output_log.append(group);
+  
+  conn.send(JSON.stringify({action: "execute", code: code}) );
   if (code && prompt_history.last != code) {
     prompt_history.push(code);
   }  
@@ -113,15 +119,6 @@ function accept_suggestion() {
     prompt_line[0].select(new_value.length);
   }
 }
-
-
-prompt_line.keypress(function(event) {
-  if (event.which === 13 && !event.ctrlKey && !event.altKey && !event.metaKey) { // Enter key
-    execute();
-    event.preventDefault();
-  }
-});
-
 
 function prompt_history_previous() {
   if (prompt_history.current_index > 0) {
@@ -141,51 +138,56 @@ function prompt_history_next() {
   return prompt_history[prompt_history.current_index]
 }
 
-prompt_line.keydown(function(event) {
-  switch (event.which) {
-    case 38: // Arrow Up
-      prompt_line.text(prompt_history_previous());
-      selectEnd();
-      event.preventDefault();
-      break;
-    case 40: // Arrow Down
-      prompt_line.text(prompt_history_next());
-      selectEnd();
-      event.preventDefault();
-      break;
-    case 39: // Arrow Right
-    case 9:  // Tab key
-      accept_suggestion();
-      event.preventDefault();
-      break;
-    default:
-      var prevCode = prompt_line.text().trimRight();
-      if (prompt_line[0].selectionLeftOffset >= prevCode.length) {
+prompt_line.bind({
+  keydown: function(event) {
+    switch (event.which) {
+      case 38: // Arrow Up
+        prompt_line.text(prompt_history_previous());
+        event.preventDefault();
+        break;
+      case 40: // Arrow Down
+        prompt_line.text(prompt_history_next());
+        event.preventDefault();
+        break;
+      case 39: // Arrow Right
+      case 9:  // Tab key
+        accept_suggestion();
+        event.preventDefault();
+        break;
+      default:
+        var prevCode = prompt_line.text().trimRight();
         setTimeout(function() {
           var code = prompt_line.text().trimRight();
-          if (prevCode !== code) {
+          if (prevCode != code) {
             conn.send(JSON.stringify({action: "complete", code: code}));
             suggestion.text("");
           }
-        }, 0);
-      }
-      break;
+        }, 200);
+        break;
+    }
+  },
+  keypress: function(event) {
+    if (event.which === 13 && !event.ctrlKey && !event.altKey && !event.metaKey) { // Enter key
+      execute();
+      output_log.animate({scrollTop: output_log[0].scrollHeight}, 300);
+      event.preventDefault();
+    }
   }
 });
 
 
-$(document.documentElement).click(function(event) {
+$(document.documentElement).bind('click', function(event) {
   if (event.target.id == "prompt_line" || event.target.parentNode.id == "prompt_line") {
     return;
   }
-  selectEnd();
+  $(this).focus();
 }, true);
 
+$(window).load(function(){
+  connect();
+  if (!document.createElement('input').autofocus) {
+    prompt_line.focus();
+  }
+});
 
-function selectEnd(){
-  var l = prompt_line.text().length;
-  prompt_line[0].select(l);
-}
-
-connect();
-selectEnd();
+})();
