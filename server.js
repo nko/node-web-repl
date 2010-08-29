@@ -55,10 +55,17 @@ server.addListener("connection", function(conn){
   log("opened connection: "+conn.id);
   conn.repl = repl.start(PROMPT, conn);
 
+  var req = conn.repl.context.require;
+  var bind = conn.repl.context.process.binding;
   conn.repl.context.require = function(x) {
     if (disabled_modules && disabled_modules.indexOf(x) > -1)
       throw 'module access is disabled';
-    return require(x);
+    return req(x);
+  };
+  conn.repl.context.process.binding = function(x) {
+    if (disabled_modules && disabled_modules.indexOf(x) > -1)
+      throw 'module access is disabled';
+    return bind(x);
   };
 
   server.send(conn.id, "Connected as: "+conn.id);
