@@ -12,16 +12,20 @@ body {
   font-family:"helvetica",sans-serif;
   margin: 0 auto;
   width: 600px;
-  color:#00233f
+  color:#00233f;
 }
 pre {
   white-space: pre-wrap;
 }
+abbr {
+  border-bottom:1px dotted #00233f;
+  cursor:help;
+}
 #app {
   border:1px solid;
   border-color:#eee #aaa #888;
-  border-radius:10px 10px 0 0;
-  -moz-border-radius:10px 10px 0 0;
+  border-radius:10px;
+  -moz-border-radius:10px;
   background-clip: padding-box;
   -webkit-background-clip: padding-box;
   margin:3em 0 1em;
@@ -29,7 +33,7 @@ pre {
 /* Header
 -------------------------------------*/
 header {
-  overflow:hidden;
+  position:relative;
 }
 h1 {
   background:#aaa url(../i/bg.png);
@@ -44,13 +48,29 @@ h1 {
   letter-spacing:-1px;
   color:#00233f;
 }
-#controls {
-  background:#222 url(../i/bg.png);
-  border-top:1px solid #555;
-  border-bottom:1px solid #bbb;
-  overflow:hidden;
-  padding:.5em;
-}
+  #description {
+    background:#222 url(../i/bg.png);
+    border-top:1px solid #555;
+    border-bottom:1px solid #bbb;
+    padding:1em .5em 1.5em 2em;
+    font-size:.9em;
+    text-shadow:0px 0px 1px #999;
+  }
+    #description a {
+      color:#000;
+      text-decoration:none;
+      border-bottom:1px solid #000;
+    }
+    #description blockquote:before {
+      float:left;
+      content: '“';
+      margin-left:-.75em;
+      font-size:1.2em;
+      font-weight:normal;
+    }
+    #description blockquote {
+      margin:0 0 .5em;
+    }
 #toggle {
   font-size:.8em;
   border-bottom:1px dashed #00233f;
@@ -76,26 +96,34 @@ h1 {
 /* Terminal 
 -------------------------------------*/
 #term {
-  font-family: monospace;
-  background:#000;
-  background:rgba(0, 0, 0, .7);
-  color: white;
-  padding:.5em;
+  font-family:monospace;
   line-height:1.3;
-  border:1px solid #999;
+  background:#aaa url(../i/bg.png);
+  border-radius:0 0 10px 10px;
+  -moz-border-radius:0 0 10px 10px;
+  background-clip: padding-box;
+  -webkit-background-clip: padding-box;
+  padding:0 0 2em;
+  color:#00233f;
 }
 .group {
-  white-space: pre-wrap;
 }
 #prompt {
+  display:block;
+  background:#000;
+  background:rgba(0, 0, 0, .65);
   color: orange;
+  padding:.5em;
+  border-top:1px solid #333;
+  border-bottom:1px solid #999;
 }
 #prompt_line {
+  background:none;
+  border:none;
+  font-family:inherit;
   color: #FFE992;
   display: inline-block;
   min-width: .5em;
-  height: 1em;
-  cursor: text;
 }
   #prompt_line:focus {
     outline:none;
@@ -104,4 +132,21 @@ h1 {
 #suggestion {
   display: inline-block;
   color: #998c7a;
+}
+#log {
+  background:#000;
+  background:rgba(0, 0, 0, .65);
+  background-clip: padding-box;
+  -webkit-background-clip: padding-box;
+  padding:.5em;
+  font-size:1em;
+  color:orange;
+  height:300px;
+  overflow-y:auto;
+}
+#credits {
+  position:fixed;
+  bottom:.25em;
+  right:.5em;
+  color:#00233f;
 }
