@@ -40,10 +40,7 @@ function connect() {
       try {
         // FIXME: we should send JSON everytime
         var json = JSON.parse(event.data);
-      } catch (err) {
-        log(event.data);
-        return;
-      }
+      } catch (err) {}
 
       if (json && json.length && json[0].length && json[0][0].slice) {
         var compl = json[0][0];
@@ -54,9 +51,10 @@ function connect() {
         }
       } else {
         suggestion.text("");
-        if (!json.splice) {
+        if (!json || !json.splice) {
           log(event.data);
         }
+        scrollToBottom();
       }
     };
 
@@ -102,7 +100,7 @@ function execute() {
 
   if (code && prompt_history.last != code) {
     prompt_history.push(code);
-  }  
+  }
 }
 
 function accept_suggestion() {
