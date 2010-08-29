@@ -94,6 +94,4 @@ server.addListener("close", function(conn){
 });
 
 server.listen(parseInt(process.env.PORT) || 8000);
-
-srv = http.createServer(function (req, res) { res.writeHead(200, {'Content-Type': 'text/plain'}); res.end('Hello World\n');
 });
