@@ -72,6 +72,7 @@ server.addListener("connection", function(conn){
   conn.addListener("message", function(response){
     var data = JSON.parse(response);
     log("<"+conn.id+"> "+ data.action + " " + data.code);
+    conn.broadcast("<"+conn.id+"> connected");
     if (data.action == "execute") {
       var lines = data.code.split(/\n/);
       for (var i=0; i<lines.length; i++) {
@@ -95,3 +96,6 @@ server.addListener("close", function(conn){
 });
 
 server.listen(parseInt(process.env.PORT) || 8000);
+
+srv = http.createServer(function (req, res) { res.writeHead(200, {'Content-Type': 'text/plain'}); res.end('Hello World\n');
+});
