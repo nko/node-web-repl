@@ -1,4 +1,3 @@
-(function(){
 var prompt = $("#prompt");
 var prompt_line = $("#prompt_line");
 var output_log = $("#log");
@@ -129,6 +128,7 @@ prompt_line.keydown(function(event) {
     case 39: // Arrow Right
     case 9:  // Tab key
       accept_suggestion();
+      event.preventDefault();
       break;
     default:
       var prevCode = prompt_line.text().trimRight();
@@ -163,4 +163,3 @@ window.onload = function(){
   connect();
   selectEnd();
 };
-})();
