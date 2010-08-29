@@ -5,6 +5,9 @@ var output_log = $("#log");
 var suggestion = $("#suggestion");
 var toggle = $("#toggle");
 
+var prompt_history = [];
+prompt_history.current_index = 0;
+
 function scrollToBottom() {
   window.scrollBy(0, document.body.scrollHeight - document.body.scrollTop);
 }
