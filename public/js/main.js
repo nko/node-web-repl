@@ -13,12 +13,15 @@ function scrollToBottom() {
 
 // loggin 
 function log(data){
+  data = data.trim();
   if (data != ">") { // FIXME
 
     if (typeof data == "undefined") {
       data = "undefined"
     } else if (data === null) {
       data = "null";
+    } else {
+      data = data.replace(/\\n/g, "\n").replace(/\\'/g, "'");
     }
 
     var group = $("<div class='group' />");
@@ -89,12 +92,12 @@ toggle.click(function(e) {
 });
 
 function execute() {
-  var code = prompt_line.text().trimRight();
+  var code = prompt_line.text().trim();
   var group = $("<div class='group' />");
-  group.text(prompt.text());
+  group.text(prompt.text().trim());
   output_log.append(group);
   conn.send(JSON.stringify({action: "execute", code: code}) );
-  prompt_line.text(" ");
+  prompt_line.html("<p><br></p>");
   prompt_line[0].select();
 }
 
@@ -158,7 +161,5 @@ function selectEnd(){
   prompt_line[0].select(l);
 }
 
-window.onload = function(){
-  connect();
-  selectEnd();
-};
+connect();
+selectEnd();
