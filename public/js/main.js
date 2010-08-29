@@ -25,8 +25,17 @@ function log(data){
     }
 
     var group = $("<div class='group' />");
+    
     group.text(data);
-    output_log.append(group);
+    
+    if (!output_log.find('.group').length > 0) {
+      output_log.prepend(group);
+    } else {
+      output_log
+        .find('.group')
+          .first()
+            .after(group);
+    }
   }
 }
 
@@ -93,7 +102,7 @@ function execute() {
   var code = prompt_line.text().trim();
   var group = $("<div class='group input' />");
   group.text(prompt.text().trim());
-  output_log.append(group);
+  output_log.prepend(group);
   conn.send(JSON.stringify({action: "execute", code: code}) );
   prompt_line.html("<p><br></p>");
   prompt_line[0].select();
