@@ -87,4 +87,4 @@ server.addListener("close", function(conn){
   conn.broadcast("<"+conn.id+"> disconnected");
 });
 
-server.listen(8000);
+server.listen(parseInt(process.env.PORT) || 8000);
