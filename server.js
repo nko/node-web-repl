@@ -6,16 +6,8 @@ var sys = require("sys")
   , express = require('express');
 
 var disabled_modules = ['fs'];
-require('repl').start('>').context.require = function(x) {
-  if (disabled_modules && disabled_modules.indexOf(x) > -1)
-    throw 'module access is disabled';
-  return require(x);
-};
 
-var PORT = 80,
-    PROMPT = ">";
-    
-var aRepl;
+var PORT = 80;
 
 function log(msg) {
   sys.puts(msg);
@@ -56,13 +48,19 @@ server.addListener("listening", function(){
   log("Listening for connections.");
 });
 
-var aRepl;
 var PROMPT = ">";
 
 // Handle WebSocket Requests
 server.addListener("connection", function(conn){
   log("opened connection: "+conn.id);
   conn.repl = repl.start(PROMPT, conn);
+
+  conn.repl.context.require = function(x) {
+    if (disabled_modules && disabled_modules.indexOf(x) > -1)
+      throw 'module access is disabled';
+    return require(x);
+  };
+
   server.send(conn.id, "Connected as: "+conn.id);
   conn.addListener("message", function(response){
     var data = JSON.parse(response);
