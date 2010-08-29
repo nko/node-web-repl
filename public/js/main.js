@@ -40,6 +40,7 @@ function connect() {
         var json = JSON.parse(event.data);
       } catch (err) {
         console.warn(err);
+        log(event.data);
         return;
       }
 
