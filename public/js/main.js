@@ -93,7 +93,7 @@ toggle.click(function(e) {
 
 function execute() {
   var code = prompt_line.text().trim();
-  var group = $("<div class='group' />");
+  var group = $("<div class='group input' />");
   group.text(prompt.text().trim());
   output_log.append(group);
   conn.send(JSON.stringify({action: "execute", code: code}) );
