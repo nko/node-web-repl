@@ -5,6 +5,8 @@ var sys = require("sys")
   , ws = require('websocket-server')
   , express = require('express');
 
+require.paths.unshift('./lib');
+
 var PORT = 80,
     PROMPT = ">";
     
