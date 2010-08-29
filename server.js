@@ -5,7 +5,12 @@ var sys = require("sys")
   , ws = require('websocket-server')
   , express = require('express');
 
-require.paths.unshift('./lib');
+var disabled_modules = ['fs'];
+require('repl').start('>').context.require = function(x) {
+  if (disabled_modules && disabled_modules.indexOf(x) > -1)
+    throw 'module access is disabled';
+  return require(x);
+};
 
 var PORT = 80,
     PROMPT = ">";
