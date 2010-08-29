@@ -70,7 +70,6 @@ server.addListener("connection", function(conn){
       for (var i=0; i<lines.length; i++) {
         conn.repl.rli.write(lines[i]);
       }
-      conn.write(data.code);
     } else if (data.action == "complete") {
       if (data.code) {
         var result = conn.repl.complete(data.code);
