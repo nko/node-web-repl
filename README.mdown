@@ -1,3 +1,7 @@
+# Node.js Web REPL
+
+![Node Web REPL](http://grab.by/grabs/7c180e6402580a52c725efe0bff5b0fe.png)
+
 ## How to run
 
     git clone git@github.com:nko/nv.git
