@@ -1,6 +1,6 @@
 # Node.js Web REPL
 
-![Node Web REPL](http://grab.by/grabs/7c180e6402580a52c725efe0bff5b0fe.png)
+![Node Web REPL](http://grab.by/grabs/aad84b77a34c3533e0c2ac67046e2a43.png)
 
 ## How to run
 
